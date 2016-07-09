@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.5)
+project(FastGFX)
+
+include(./sources.cmake)
+
+include_directories(deps/glm)
+
+set(SRC_ROOT ./)
+aux_source_directory(${SRC_ROOT}src SRC_LIST)
+set(SOURCE_FILES ${SRC_LIST})
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -stdlib=libc++ -O0 -g4")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror -s NO_EXIT_RUNTIME=1 -s DEMANGLE_SUPPORT=1 -s ASSERTIONS=2")
+set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} --bind -s TOTAL_MEMORY=128000000  -g4")
+
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -stdlib=libc++ -O3 -Os")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -Werror -s NO_EXIT_RUNTIME=1 -s DEMANGLE_SUPPORT=1")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s TOTAL_MEMORY=128000000 -Wno-error=unused-command-line-argument")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s DISABLE_EXCEPTION_CATCHING=0 -s ASSERTIONS=1")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+set(CMAKE_C_COMPILER "emcc")
+set(CMAKE_CXX_COMPILER "em++")
+add_library(FastGFX STATIC ${SOURCE_FILES})
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")

@@ -15,14 +15,13 @@ namespace fgfx {
   class SpriteFont;
 }
 
-#include "vectors.h"
-#include "Sprite.h"
-#include "Engine.h"
-#include "LineLayer.h"
-#include "SpriteLayer.h"
-#include "Layer.h"
-#include "PolygonLayer.h"
-#include "SpriteFont.h"
+#include "../src/Sprite.h"
+#include "../src/Engine.h"
+#include "../src/LineLayer.h"
+#include "../src/SpriteLayer.h"
+#include "../src/Layer.h"
+#include "../src/PolygonLayer.h"
+#include "../src/SpriteFont.h"
 
 
 #endif //ENGINE_FGFX_H

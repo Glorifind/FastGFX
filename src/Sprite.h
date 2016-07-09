@@ -4,11 +4,9 @@
 #include <glm/vec2.hpp>
 #include <string>
 
-#include <ApiObject.h>
-
 namespace fgfx {
 
-  class Sprite : public ApiObject {
+  class Sprite {
     friend class SpriteBuffer;
   protected:
     glm::vec2 coords[4];

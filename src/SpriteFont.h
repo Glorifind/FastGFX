@@ -8,8 +8,6 @@
 #include <glm/glm.hpp>
 #include "SpriteLayer.h"
 
-#include <ApiObject.h>
-
 namespace fgfx {
 
   class SpriteCharacter {
@@ -20,7 +18,7 @@ namespace fgfx {
     float advance;
   };
 
-  class SpriteFont : public ApiObject {
+  class SpriteFont {
   public:
     std::string name;
     std::map<unsigned short, SpriteCharacter> characters;

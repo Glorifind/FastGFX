@@ -4,7 +4,6 @@
 #include <string>
 
 #include <glm/glm.hpp>
-#include <ApiObject.h>
 
 namespace fgfx {
 
@@ -15,7 +14,7 @@ namespace fgfx {
     Transparent
   };
 
-  class Layer : public ApiObject {
+  class Layer {
   public:
     std::string name;
     Engine* engine;
