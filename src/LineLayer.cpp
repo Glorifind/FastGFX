@@ -60,7 +60,7 @@ namespace fgfx {
   }
 
 
-  LineLayer::LineLayer(Engine* enginep, std::string namep) : Layer(enginep,namep), linePointsCount(0) {
+  LineLayer::LineLayer(Engine* enginep) : Layer(enginep), linePointsCount(0) {
     glGenBuffers(1,&positionBuffer);
     glGenBuffers(1,&colorBuffer);
   }

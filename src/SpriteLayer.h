@@ -35,10 +35,10 @@ namespace fgfx {
     void beginDraw(glm::mat4 cameraMatrix);
     void endDraw();
   public:
-    SpriteLayer(Engine* enginep, std::string namep);
+    SpriteLayer(Engine* enginep);
 
-    void bufferSprite(std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, double size, double rotation);
-    void bufferSprite(std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color);
+    void bufferSprite(const std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, float size, float rotation);
+    void bufferSprite(const std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color);
     virtual void reset() override ;
     virtual void upload() override ;
     virtual void render(glm::mat4 cameraMatrix) override ;

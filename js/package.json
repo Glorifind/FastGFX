@@ -1,0 +1,10 @@
+{
+  "name": "FastGFX",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "babel-loader": "^6.2.4"
+  }
+}

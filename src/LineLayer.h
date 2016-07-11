@@ -38,7 +38,7 @@ namespace fgfx {
     bool wireframe;
     bool uploaded;
 
-    LineLayer(Engine* enginep, std::string namep);
+    LineLayer(Engine* enginep);
     ~LineLayer();
 
     void reserve(int pointCount);

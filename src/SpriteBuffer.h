@@ -38,8 +38,8 @@ namespace fgfx {
     void reserve(int pointCount);
     void bufferPoint(glm::vec3 pos, glm::vec4 color, glm::vec2 coord);
     void bufferPoint(glm::vec2 pos, glm::vec4 color, glm::vec2 coord);
-    void bufferSprite(std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, double size, double rotation);
-    void bufferSprite(std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color);
+    void bufferSprite(const std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, double size, double rotation);
+    void bufferSprite(const std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color);
     void reset();
     void upload();
     void render();

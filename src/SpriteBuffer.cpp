@@ -44,7 +44,7 @@ namespace fgfx {
    // emscripten_log(EM_LOG_ERROR, "BUFFER POINT (%.4lf,%.4lf) (%.2lf,%.2lf,%.2lf,%.2lf) (%.2lf,%.2lf)\n",
     //               pos.x,pos.y,color.r,color.g,color.b,color.a,coord.x,coord.y);
   }
-  void SpriteBuffer::bufferSprite(std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, double size, double rotation) {
+  void SpriteBuffer::bufferSprite(const std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, double size, double rotation) {
     double sv = sin(rotation - 3.14159265 / 4); // Rotation - 45 deg
     double cv = cos(rotation - 3.14159265 / 4);
     glm::vec2 m1(sv * size * SQRT_2, -cv * size * SQRT_2);
@@ -58,7 +58,7 @@ namespace fgfx {
     bufferPoint(pos + m1, color, sprite->coords[0]); // upper left
     bufferPoint(pos - m1, color, sprite->coords[2]); // lower right
   }
-  void SpriteBuffer::bufferSprite(std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color) {
+  void SpriteBuffer::bufferSprite(const std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color) {
     glm::vec3 p1 = glm::vec3(mat*glm::vec4(-1,-1,0,1));
     glm::vec3 p2 = glm::vec3(mat*glm::vec4(1,-1,0,1));
     glm::vec3 p3 = glm::vec3(mat*glm::vec4(1,1,0,1));

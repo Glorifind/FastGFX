@@ -3,35 +3,14 @@
 
 namespace fgfx {
 
+  std::shared_ptr<Engine> engine;
+
   Engine::Engine() {
-
-    const char vShaderStr[] =
-        "attribute vec4 vPosition;    \n"
-            "void main()                  \n"
-            "{                            \n"
-            "   gl_Position = vPosition;  \n"
-            "}                            \n";
-
-    const char fShaderStr[] =
-        "precision mediump float;\n"\
-            "void main()                                  \n"
-            "{                                            \n"
-            "  gl_FragColor = vec4 ( 1.0, 0.0, 0.0, 1.0 );\n"
-            "}                                            \n";
-
-    auto vertexShader = fgfx::loadShader ( GL_VERTEX_SHADER, vShaderStr );
-    auto fragmentShader = fgfx::loadShader ( GL_FRAGMENT_SHADER, fShaderStr );
-
-    spritesProgram = fgfx::createProgram (vertexShader, fragmentShader);
-
-    spritesProgramPositionLocation=glGetAttribLocation(spritesProgram,"vPosition");
-    glEnableVertexAttribArray(spritesProgramPositionLocation);
-
     SpriteLayer::initializeSpriteProgram();
     LineLayer::initializeLineProgram();
     PolygonLayer::initializePolygonProgram();
 
-    currentTime=0;
+    //currentTime=0;
   }
 
   Engine::~Engine() {
@@ -41,7 +20,10 @@ namespace fgfx {
   std::shared_ptr<Sprite> Engine::getSprite(std::string spriteName) {
     emscripten_log(EM_LOG_ERROR, "LOADING SPRITE!!! %s\n",spriteName.c_str());
     auto it = sprites.find(spriteName);
-    if (it != sprites.end()) return it->second;
+    if (it != sprites.end()) {
+      std::shared_ptr<Sprite> sprite = it->second;
+      if(sprite->unloaded) reloadSprite(sprite);
+    }
     std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(spriteName);
     spritesToLoad.push_back(sprite);
     sprites[spriteName] = sprite;
@@ -57,6 +39,7 @@ namespace fgfx {
     auto it = spriteFonts.find(spriteFontName);
     if (it != spriteFonts.end()) return it->second;
     std::shared_ptr<SpriteFont> spriteFont = std::make_shared<SpriteFont>(spriteFontName);
+    spriteFontsToLoad.push_back(spriteFont);
     spriteFonts[spriteFontName] = spriteFont;
     return spriteFont;
   }
@@ -71,11 +54,37 @@ namespace fgfx {
     spritesToLoad.clear();
   }
 
-  int Engine::getEngineTime() {
-    return currentTime;
+
+  int Engine::getSpriteFontsToLoadCount() {
+    return spriteFontsToLoad.size();
   }
-  int Engine::incEngineTime() {
-    return currentTime++;
+  std::shared_ptr<SpriteFont> Engine::getSpriteFontToLoad(int n) {
+    return spriteFontsToLoad[n];
+  }
+  void Engine::clearSpriteFontsToLoad() {
+    spriteFontsToLoad.clear();
+  }
+
+  void Engine::setRenderFunction(std::function<void(float,float)> renderFunctionp) {
+    renderFunction=renderFunctionp;
+  }
+
+  void Engine::render(double time, float delta, int widthp, int heightp) {
+    renderTime = time;
+    renderDelta = delta;
+    width = widthp;
+    height = heightp;
+    if(renderFunction) renderFunction(time,delta);
+  }
+
+  std::shared_ptr<SpriteLayer> Engine::createSpriteLayer() {
+    return std::make_shared<SpriteLayer>(this);
+  }
+  std::shared_ptr<PolygonLayer> Engine::createPolygonLayer() {
+    return std::make_shared<PolygonLayer>(this);
+  }
+  std::shared_ptr<LineLayer> Engine::createLineLayer() {
+    return std::make_shared<LineLayer>(this);
   }
 
 };

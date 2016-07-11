@@ -3,10 +3,11 @@
 
 #include <glm/vec2.hpp>
 #include <string>
+#include <memory>
 
 namespace fgfx {
 
-  class Sprite {
+  class Sprite : public std::enable_shared_from_this<Sprite> {
     friend class SpriteBuffer;
   protected:
     glm::vec2 coords[4];

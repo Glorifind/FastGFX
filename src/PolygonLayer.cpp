@@ -58,7 +58,7 @@ namespace fgfx {
     glDisableVertexAttribArray(PolygonLayer::polygonProgramAttribColor);
   }
 
-  PolygonLayer::PolygonLayer(Engine* enginep, std::string namep) : Layer(enginep,namep), polygonPointsCount(0) {
+  PolygonLayer::PolygonLayer(Engine* enginep) : Layer(enginep), polygonPointsCount(0) {
     glGenBuffers(1,&positionBuffer);
     glGenBuffers(1,&colorBuffer);
   }

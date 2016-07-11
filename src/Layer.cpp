@@ -3,7 +3,7 @@
 
 namespace fgfx {
 
-  Layer::Layer(Engine *enginep, std::string namep) : name(namep), engine(enginep), composition(2),
+  Layer::Layer(Engine *enginep) :  engine(enginep), composition(2),
     frozen(false), visible(true), camera(false) {
   }
 
@@ -21,10 +21,6 @@ namespace fgfx {
   }
   void Layer::setVisible(bool visiblep) {
     visible = visiblep;
-  }
-
-  std::string Layer::getName() {
-    return name;
   }
 
   bool Layer::isVisible() {

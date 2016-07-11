@@ -16,14 +16,13 @@ namespace fgfx {
 
   class Layer {
   public:
-    std::string name;
     Engine* engine;
     int composition;
     bool frozen;
     bool visible;
     bool camera;
     glm::mat4 cameraMatrix;
-    Layer(Engine* enginep, std::string namep);
+    Layer(Engine* enginep);
     virtual ~Layer() = 0;
 
     void setFrozen(bool frozenp);

@@ -7,7 +7,7 @@
 
 namespace fgfx {
 
-  SpriteLayer::SpriteLayer(Engine* enginep, std::string namep) : Layer(enginep,namep) {
+  SpriteLayer::SpriteLayer(Engine* enginep) : Layer(enginep) {
     composition=1;
   };
 
@@ -20,19 +20,19 @@ namespace fgfx {
     return buf;
   }
 
-  void SpriteLayer::bufferSprite(std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, double size, double rotation) {
+  void SpriteLayer::bufferSprite(const std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, float size, float rotation) {
     //emscripten_log(EM_LOG_ERROR,"BUFFER SPRITE (%04.4lf,%04.4lf) %04.4lf textureId=%d\n",pos.x,pos.y,size,sprite->textureId);
     //emscripten_log(EM_LOG_ERROR,"BUFFER SPRITE %s textureId=%d\n",sprite->name.c_str(),sprite->textureId);
-    sprite->lastUseTime = engine->currentTime;
+    //sprite->lastUseTime = engine->currentTime;
     if(sprite->unloaded) engine->reloadSprite(sprite);
     if(sprite->textureId == -1) return;
     SpriteBuffer* buf = getBuffer(sprite->textureId);
     buf->bufferSprite(sprite, pos, color, size, rotation);
   }
 
-  void SpriteLayer::bufferSprite(std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color) {
+  void SpriteLayer::bufferSprite(const std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color) {
     //emscripten_log(EM_LOG_ERROR,"BUFFER SPRITE %s textureId=%d\n",sprite->name.c_str(),sprite->textureId);
-    sprite->lastUseTime = engine->currentTime;
+    //sprite->lastUseTime = engine->currentTime;
     if(sprite->unloaded) engine->reloadSprite(sprite);
     if(sprite->textureId == -1) return;
     SpriteBuffer* buf = getBuffer(sprite->textureId);
@@ -119,26 +119,12 @@ namespace fgfx {
   void SpriteLayer::render(glm::mat4 cameraMatrix) {
     if(!visible) return;
     beginDraw(cameraMatrix);
-
+    glActiveTexture(GL_TEXTURE0);
+    glDisable(GL_CULL_FACE);
     for(auto it = buffers.begin(); it!=buffers.end(); ++it) {
       SpriteBuffer* buffer=*it;
-      glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, buffer->textureId);
       glUniform1i(SpriteLayer::spriteProgramUniformSampler, 0);
-      switch(composition) {
-        case 0 :
-          glDisable(GL_BLEND);
-          break;
-        case 1 :
-          glEnable(GL_BLEND);
-          glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-          break;
-        case 2 :
-          glEnable(GL_BLEND);
-          glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-          break;
-      }
-      glDisable(GL_CULL_FACE);
       buffer->render();
     }
 
