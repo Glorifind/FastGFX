@@ -8,24 +8,45 @@ var animator = new Animator(false)
 
 var textureManager
 
-window.fgfxLoader = window.fgfxLoader || {
-    loadImage: function(name) {
-      var url = name
-      return new Promise((resolve,reject) => {
-        var image = new Image()
-        image.crossOrigin = "anonymous"
-        image.src = url
-        if(image.complete) {
-          return resolve(image)
-        }
-        image.onload=function() {
-          resolve(image)
-        }
-        image.onerror=function() {
-          reject('Could not load image '+url)
-        }
-      })
+var loadImage = function(url) {
+  return new Promise((resolve,reject) => {
+    var image = new Image()
+    image.crossOrigin = "anonymous"
+    image.src = url
+    if(image.complete) {
+      return resolve(image)
     }
+    image.onload=function() {
+      resolve(image)
+    }
+    image.onerror=function() {
+      reject('Could not load image '+url)
+    }
+  })
+}
+
+var loadText = function(url) {
+  return new Promise((resolve, reject) => {
+    var http = new XMLHttpRequest()
+    http.requestType = "text"
+    http.open('GET', url, true)
+    http.onreadystatechange = function () {
+      if (http.readyState == 4) {
+        if (http.status == 200) {
+          resolve(http.responseText)
+        } else {
+          reject('HTTP download error on url ' + url + ' STATUS: ' + http.status + ': ' + http.statusText)
+        }
+      }
+    }
+    http.send(null)
+  })
+}
+
+window.fgfxLoader = window.fgfxLoader || {
+    loadSpriteImage: loadImage,
+    loadFontData: (name) => loadText(name + '.fnt'),
+    loadFontImage: (name) => loadImage(name + '.png')
   }
 
 window.Module = window.Module || {}

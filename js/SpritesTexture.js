@@ -134,7 +134,7 @@ SpritesTexture.prototype.upload = function() {
     //console.log("COORDS",sprite.name,sprite.coords)
     Module._fgfx_Sprite_setTextureFragment(sprite.sprite, sprite.texture,
       sprite.coords.xmin, sprite.coords.ymin, sprite.coords.xmax, sprite.coords.ymax,
-      sprite.coords.width, sprite.coords.height)
+      sprite.coords.width, sprite.coords.height, false)
   }
 
   this.needUpload = false

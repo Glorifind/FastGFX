@@ -20,7 +20,8 @@ namespace fgfx {
     bool preloaded;
     bool unloaded;
     Sprite(std::string namep);
-    void setTextureFragment(int textureIdp, float left, float top, float right, float bottom, int widthp, int heightp);
+    void setTextureFragment(int textureIdp, float left, float top, float right, float bottom, int widthp, int heightp,
+                            bool preloadedp);
     std::string getSpriteName();
     void unload();
   };

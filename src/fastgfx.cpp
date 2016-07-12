@@ -44,14 +44,19 @@ void fgfx_clearSpritesToLoad(int id) {
 }
 
 EMSCRIPTEN_KEEPALIVE
+fgfx::Sprite* fgfx_getSprite(const char* spriteName) {
+  return fgfx::engine->getSprite(spriteName).get();
+}
+
+EMSCRIPTEN_KEEPALIVE
 const char* fgfx_Sprite_getName(fgfx::Sprite* sprite) {
   return sprite->name.c_str();
 }
 
 EMSCRIPTEN_KEEPALIVE
 void fgfx_Sprite_setTextureFragment(fgfx::Sprite* sprite, int textureIdp, float left, float top, float right, float bottom,
-                                    int widthp, int heightp) {
-  sprite->setTextureFragment(textureIdp,left,top,right,bottom,widthp,heightp);
+                                    int widthp, int heightp, bool preloaded) {
+  sprite->setTextureFragment(textureIdp, left, top, right, bottom, widthp, heightp, preloaded);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -70,21 +75,20 @@ void fgfx_clearSpriteFontsToLoad(int id) {
 }
 
 EMSCRIPTEN_KEEPALIVE
-const char* fgfx_Font_getName(fgfx::SpriteFont* font) {
+const char* fgfx_SpriteFont_getName(fgfx::SpriteFont* font) {
   return font->name.c_str();
 }
 
 EMSCRIPTEN_KEEPALIVE
-void fgfx_Font_setHeight(fgfx::SpriteFont* font, float linep, float basep) {
+void fgfx_SpriteFont_setHeight(fgfx::SpriteFont* font, float linep, float basep) {
   font -> setHeight(linep, basep);
 }
 
 EMSCRIPTEN_KEEPALIVE
-void fgfx_Font_setCharacter(fgfx::SpriteFont* font, unsigned short character, fgfx::Sprite* sprite,
+void fgfx_SpriteFont_setCharacter(fgfx::SpriteFont* font, unsigned short character, fgfx::Sprite* sprite,
                             float xSize, float ySize, float xOffset, float yOffset, float advance) {
   font -> setCharacter(character,sprite->shared_from_this(),glm::vec2(xSize,ySize),glm::vec2(xOffset,yOffset),advance);
 }
-
 
 
 };

@@ -13,7 +13,8 @@ namespace fgfx {
     return name;
   }
 
-  void Sprite::setTextureFragment(int textureIdp, float left, float top, float right, float bottom, int widthp, int heightp) {
+  void Sprite::setTextureFragment(int textureIdp, float left, float top, float right, float bottom, int widthp,
+                                  int heightp, bool preloadedp) {
     emscripten_log(EM_LOG_ERROR, "SET TEXTURE FRAGMENT %s %d %d %d\n",name.c_str(),textureIdp,width,height);
     textureId = textureIdp;
     coords[0] = glm::vec2(left,bottom);
@@ -22,6 +23,7 @@ namespace fgfx {
     coords[3] = glm::vec2(left,top);
     width = widthp;
     height = heightp;
+    preloaded = preloadedp;
   }
 
   void Sprite::unload() {

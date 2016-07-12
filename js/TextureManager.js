@@ -14,7 +14,6 @@ var TextureManager = function(gl,loader) {
   this.maxSize = 512
 
   this.spacing = 2
-
 }
 var absUrlPattern = /^https?:\/\//i
 TextureManager.prototype.loadSprite = function(sprite) {
@@ -25,8 +24,7 @@ TextureManager.prototype.loadSprite = function(sprite) {
     console.debug("SPRITE LOAD AND PUSH",name)
     Module._fgfx_Sprite_setTextureFragment(loaded.sprite,loaded.texture,
       loaded.coords.xmin, loaded.coords.ymin, loaded.coords.xmax, loaded.coords.ymax,
-      loaded.coords.width, loaded.coords.height)
-    sprite.preloaded = loaded.preloaded || false
+      loaded.coords.width, loaded.coords.height, loaded.preloaded || false)
     return;
   }
   var loading = this.loadingSprites.get(name)
@@ -44,7 +42,7 @@ TextureManager.prototype.loadSprite = function(sprite) {
     image: null
   }
   this.loadingSprites.set(name,sprite)
-  this.loader.loadImage(name).then((image) => {
+  this.loader.loadSpriteImage(name).then((image) => {
     //console.log("SPRITE LOADED",image)
     sprite.image = image
     var bigger = false
@@ -68,6 +66,13 @@ TextureManager.prototype.loadSprite = function(sprite) {
     }
   })
 }
+TextureManager.prototype.loadSpriteFont = function(font) {
+  var name = Module.Pointer_stringify(Module._fgfx_SpriteFont_getName(font))
+  console.info("LOADING FONT",name)
+  var imagePromise = this.loader.loadFontImage(name)
+  var dataPromise = this.loader.loadFontData(name)
+  imagePromise.then((image)=> dataPromise.then((data)=> this.uploadPackedSpriteFont(font,data,image)))
+}
 TextureManager.prototype.reload = function() {
   var cnt = Module._fgfx_getSpritesToLoadCount()
   for(var i=0; i<cnt; i++) {
@@ -75,6 +80,13 @@ TextureManager.prototype.reload = function() {
     this.loadSprite(sprite)
   }
   Module._fgfx_clearSpritesToLoad()
+
+  var cnt = Module._fgfx_getSpriteFontsToLoadCount()
+  for(var i=0; i<cnt; i++) {
+    var font = Module._fgfx_getSpriteFontToLoad(i)
+    this.loadSpriteFont(font)
+  }
+  Module._fgfx_clearSpriteFontsToLoad()
 
   for (var i = 0; i < this.spriteTextures.length; i++) {
     this.spriteTextures[i].upload()
@@ -85,10 +97,9 @@ TextureManager.prototype.clean = function(engineTime) {
     this.spriteTextures[i].clean(engineTime)
   }
 }
-TextureManager.prototype.loadPackedSpriteFont = function(name, fntData, imageUrl) {
-  var preloadImageTask = preload.preloadImageTask(imageUrl)
+TextureManager.prototype.uploadPackedSpriteFont = function(spriteFont, fntData, image) {
   var data = parseBmFont(fntData)
-  console.debug("PRELOAD PACKED FONT SPRITES", fntData)
+  console.debug("PRELOAD PACKED FONT SPRITES", fntData, image)
   for(var i = 0, l=data.chars.length; i<l; i++) {
     var char = data.chars[i]
     var c = String.fromCharCode(char.id)
@@ -104,66 +115,54 @@ TextureManager.prototype.loadPackedSpriteFont = function(name, fntData, imageUrl
     })
   }
 
-  /// TODO: add to images preloader
-  preloadImageTask.start()
-  preloadImageTask.resultPromise.then((function(image) {
-    /// LOAD TEXTURE TO GPU MEMORY
+  /// LOAD TEXTURE TO GPU MEMORY
+  var w = image.width
+  var h = image.height
 
-    var w = image.width
-    var h = image.height
+  var gl = this.gl
+  var texture = gl.createTexture()
+  gl.bindTexture(gl.TEXTURE_2D, texture)
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,image)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
+  gl.generateMipmap(gl.TEXTURE_2D);
 
-    var gl = this.gl
-    var texture = gl.createTexture()
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,image)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
-    gl.generateMipmap(gl.TEXTURE_2D);
+  while(GL.textures.length == 0) GL.textures.push(null)
+  var textureId = GL.textures.length
+  GL.textures.push(texture)
 
-    while(GL.textures.length == 0) GL.textures.push(null)
-    var textureId = GL.textures.length
-    GL.textures.push(texture)
-
-    console.debug("LOADED SPRITES FONT TEXTURE",textureId)
-    /// LOAD FONT SPRITES
-    var cppName = Module.allocate(Module.intArrayFromString(name), 'i8', ALLOC_NORMAL)
-    var spriteFont = Module._api_fgfx_Engine_getSpriteFont(this.engine,cppName)
-    Module._free(cppName)
-    Module._fgfx_SpriteFont_setHeight(spriteFont,data.common.lineHeight,data.common.base)
-    //console.log("FONT DATA",data)
-    for(var i = 0, l = data.chars.length; i<l; i++) {
-      var char = data.chars[i]
-      var c = String.fromCharCode(char.id)
-      var spriteName = "font_"+name+"_"+c
-      console.debug("FONT SPRITE LOADED",spriteName)
-      var loaded = this.loadingSprites.get(spriteName)
-      loaded.coords = {
-        xmin: char.x/w,
-        ymin: char.y/h,
-        xmax: (char.x+char.width)/w,
-        ymax: (char.y+char.height)/h,
-        width: char.width,
-        height: char.height
-      }
-      loaded.texture = textureId
-      this.loadingSprites.delete(spriteName)
-      this.loadedSprites.set(spriteName,loaded)
-      console.log("SPR",spriteName,"ENG",this.engine)
-      var cppSpriteName = Module.allocate(Module.intArrayFromString(spriteName), 'i8', ALLOC_NORMAL)
-      if(!loaded.sprite) loaded.sprite = Module._api_fgfx_Engine_getSprite(this.engine,cppSpriteName)
-      Module._free(cppSpriteName)
-      Module._api_fgfx_Sprite_setTextureFragment(loaded.sprite,loaded.texture,
-        loaded.coords.xmin, loaded.coords.ymin, loaded.coords.xmax, loaded.coords.ymax,
-        loaded.coords.width, loaded.coords.height)
-      console.debug("SET CHAR",char,"SP",loaded.sprite,"AT",spriteFont)
-      var size = Module._api_alloc_struct_fgfx_Vec2(char.width, char.height)
-      var offset = Module._api_alloc_struct_fgfx_Vec2(char.xoffset, char.yoffset)
-      Module._api_text_SpriteFont_setCharacter(spriteFont, char.id, loaded.sprite, size, offset, char.xadvance)
-      Module._api_free_struct_fgfx_Vec2(size)
-      Module._api_free_struct_fgfx_Vec2(offset)
+  console.debug("LOADED SPRITES FONT TEXTURE",textureId)
+  /// LOAD FONT SPRITES
+  Module._fgfx_SpriteFont_setHeight(spriteFont,data.common.lineHeight,data.common.base)
+  //console.log("FONT DATA",data)
+  for(var i = 0, l = data.chars.length; i<l; i++) {
+    var char = data.chars[i]
+    var c = String.fromCharCode(char.id)
+    var spriteName = "font_"+name+"_"+c
+    console.debug("FONT SPRITE LOADED",spriteName)
+    var loaded = this.loadingSprites.get(spriteName)
+    loaded.coords = {
+      xmin: char.x/w,
+      ymin: char.y/h,
+      xmax: (char.x+char.width)/w,
+      ymax: (char.y+char.height)/h,
+      width: char.width,
+      height: char.height
     }
-  }).bind(this))
-
+    loaded.texture = textureId
+    this.loadingSprites.delete(spriteName)
+    this.loadedSprites.set(spriteName,loaded)
+    console.log("SPR",spriteName,"ENG",this.engine)
+    var cppSpriteName = Module.allocate(Module.intArrayFromString(spriteName), 'i8', ALLOC_NORMAL)
+    if(!loaded.sprite) loaded.sprite = Module._fgfx_getSprite(cppSpriteName)
+    Module._free(cppSpriteName)
+    Module._fgfx_Sprite_setTextureFragment(loaded.sprite,loaded.texture,
+      loaded.coords.xmin, loaded.coords.ymin, loaded.coords.xmax, loaded.coords.ymax,
+      loaded.coords.width, loaded.coords.height, true)
+    console.debug("SET CHAR",char,"SP",loaded.sprite,"AT",spriteFont)
+    Module._fgfx_SpriteFont_setCharacter(spriteFont, char.id, loaded.sprite, char.width, char.height,
+      char.xoffset, char.yoffset, char.xadvance)
+  }
 }
 TextureManager.prototype.loadPackedSprites = function(sprites,imageUrl) {
   var preloadImageTask = preload.preloadImageTask(imageUrl)
