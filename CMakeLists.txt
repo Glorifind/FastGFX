@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.3)
 project(FastGFX)
 
-include(./sources.cmake)
-
 include_directories(deps/glm include)
 
 set(SRC_ROOT ./)
