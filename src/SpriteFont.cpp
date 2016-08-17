@@ -45,7 +45,7 @@ namespace fgfx {
         glm::vec2 pos(x + charStruct.size.x*0.5 - charStruct.offset.x*0.5,-charStruct.size.y*0.5-charStruct.offset.y);
         auto translate = glm::translate(glm::mat4(),glm::vec3(pos,0));
         auto scale = glm::scale(glm::mat4(),glm::vec3(charStruct.size.x*0.5,charStruct.size.y*0.5,1));
-        layer->bufferSprite(charStruct.sprite,mat*translate*scale,color);
+        layer->rawBgiufferSprite(charStruct.sprite,mat*translate*scale,color);
         x += charStruct.advance;
       }
     }

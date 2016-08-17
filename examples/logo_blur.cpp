@@ -38,7 +38,7 @@ int main() {
       float rotation = cycleTime*sin(cycleTime)*12.3;
       spriteLayer->bufferSprite(logoSprite,
                                 glm::scale(
-                                    glm::rotate(glm::mat4(), rotation, glm::vec3(0, 0, 1)), glm::vec3(55, 10, 10)),
+                                    glm::rotate(glm::mat4(), rotation, glm::vec3(0, 0, 1)), glm::vec3(10, 10, 10)),
                                 glm::vec4(1, 1, 1, 1.0/(i*0.1)));
     }
 

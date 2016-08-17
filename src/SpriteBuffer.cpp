@@ -45,10 +45,12 @@ namespace fgfx {
     //               pos.x,pos.y,color.r,color.g,color.b,color.a,coord.x,coord.y);
   }
   void SpriteBuffer::bufferSprite(const std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, double size, double rotation) {
-    double sv = sin(rotation - 3.14159265 / 4); // Rotation - 45 deg
-    double cv = cos(rotation - 3.14159265 / 4);
-    glm::vec2 m1(sv * size * SQRT_2, -cv * size * SQRT_2);
-    glm::vec2 m2(cv * size * SQRT_2, sv * size * SQRT_2);
+    double sv = sin(rotation); // Rotation
+    double cv = cos(rotation);
+    glm::vec2 up(sv * size, -cv * size);
+    glm::vec2 right(cv * size * sprite->ratio, sv * size * sprite->ratio);
+    glm::vec2 m1 = up - right;
+    glm::vec2 m2 = up + right;
 
     bufferPoint(pos + m1, color, sprite->coords[0]); // upper left
     bufferPoint(pos + m2, color, sprite->coords[1]); // upper right
@@ -59,6 +61,21 @@ namespace fgfx {
     bufferPoint(pos - m1, color, sprite->coords[2]); // lower right
   }
   void SpriteBuffer::bufferSprite(const std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color) {
+    auto r = sprite->ratio;
+    glm::vec3 p1 = glm::vec3(mat*glm::vec4(-1*r,-1,0,1));
+    glm::vec3 p2 = glm::vec3(mat*glm::vec4(1*r,-1,0,1));
+    glm::vec3 p3 = glm::vec3(mat*glm::vec4(1*r,1,0,1));
+    glm::vec3 p4 = glm::vec3(mat*glm::vec4(-1*r,1,0,1));
+
+    bufferPoint(p1, color, sprite->coords[0]); // upper left
+    bufferPoint(p2, color, sprite->coords[1]); // upper right
+    bufferPoint(p3, color, sprite->coords[2]); // lower right
+
+    bufferPoint(p4, color, sprite->coords[3]); // lower left
+    bufferPoint(p1, color, sprite->coords[0]); // upper left
+    bufferPoint(p3, color, sprite->coords[2]); // lower right
+  }
+  void SpriteBuffer::rawBufferSprite(const std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color) {
     glm::vec3 p1 = glm::vec3(mat*glm::vec4(-1,-1,0,1));
     glm::vec3 p2 = glm::vec3(mat*glm::vec4(1,-1,0,1));
     glm::vec3 p3 = glm::vec3(mat*glm::vec4(1,1,0,1));

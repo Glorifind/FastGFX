@@ -39,6 +39,15 @@ namespace fgfx {
     buf->bufferSprite(sprite, mat, color);
   }
 
+  void SpriteLayer::rawBufferSprite(const std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color) {
+    //emscripten_log(EM_LOG_ERROR,"BUFFER SPRITE %s textureId=%d\n",sprite->name.c_str(),sprite->textureId);
+    //sprite->lastUseTime = engine->currentTime;
+    if(sprite->unloaded) engine->reloadSprite(sprite);
+    if(sprite->textureId == -1) return;
+    SpriteBuffer* buf = getBuffer(sprite->textureId);
+    buf->rawBufferSprite(sprite, mat, color);
+  }
+
   GLuint SpriteLayer::spriteProgram = 0;
   GLuint SpriteLayer::spriteProgramAttribColor = 0;
   GLuint SpriteLayer::spriteProgramAttribPosition = 0;

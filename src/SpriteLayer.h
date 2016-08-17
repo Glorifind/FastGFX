@@ -39,6 +39,8 @@ namespace fgfx {
 
     void bufferSprite(const std::shared_ptr<Sprite>& sprite, glm::vec2 pos, glm::vec4 color, float size, float rotation);
     void bufferSprite(const std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color);
+    void rawBufferSprite(const std::shared_ptr<Sprite>& sprite, const glm::mat4 &mat, glm::vec4 color);
+
     virtual void reset() override ;
     virtual void upload() override ;
     virtual void render(glm::mat4 cameraMatrix) override ;

@@ -16,6 +16,7 @@ namespace fgfx {
     int textureId;
     int width;
     int height;
+    float ratio;
     int lastUseTime;
     bool preloaded;
     bool unloaded;

@@ -33,7 +33,7 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     spriteLayer->reset();
-    spriteLayer->bufferSprite(logoSprite, glm::vec2(0,0), glm::vec4(1,1,1,1),30.0,rotation);
+    spriteLayer->bufferSprite(logoSprite, glm::vec2(0,0), glm::vec4(1,1,1,1), 10.0, rotation);
     spriteLayer->upload();
     spriteLayer->render(camera);
 

@@ -23,6 +23,7 @@ namespace fgfx {
     coords[3] = glm::vec2(left,top);
     width = widthp;
     height = heightp;
+    ratio = 1.0*width/height;
     preloaded = preloadedp;
   }
 
