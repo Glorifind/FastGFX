@@ -5,8 +5,7 @@
 #ifndef ENGINE_SHADERS_H
 #define ENGINE_SHADERS_H
 
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
+#include "config.h"
 
 namespace fgfx {
 

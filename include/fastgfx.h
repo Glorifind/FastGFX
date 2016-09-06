@@ -5,12 +5,6 @@
 #ifndef ENGINE_FGFX_H
 #define ENGINE_FGFX_H
 
-#include <emscripten.h>
-#define fgfx_log(...) emscripten_log(EM_LOG_ERROR, __VA_ARGS__)
-
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>

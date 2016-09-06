@@ -12,8 +12,7 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
+#include "config.h"
 
 namespace fgfx {
 

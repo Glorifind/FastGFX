@@ -1,5 +1,5 @@
 #include "Engine.h"
-#include <emscripten.h>
+#include "config.h"
 
 namespace fgfx {
 
@@ -18,7 +18,7 @@ namespace fgfx {
   }
 
   std::shared_ptr<Sprite> Engine::getSprite(std::string spriteName) {
-    emscripten_log(EM_LOG_ERROR, "LOADING SPRITE!!! %s\n",spriteName.c_str());
+    fgfx_log("LOADING SPRITE!!! %s\n",spriteName.c_str());
     auto it = sprites.find(spriteName);
     if (it != sprites.end()) {
       std::shared_ptr<Sprite> sprite = it->second;

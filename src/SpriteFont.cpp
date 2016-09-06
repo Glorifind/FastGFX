@@ -6,7 +6,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <emscripten.h>
+#include "config.h"
 
 namespace fgfx {
 

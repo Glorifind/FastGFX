@@ -5,7 +5,7 @@
 #include "PolygonLayer.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <emscripten.h>
+#include "config.h"
 
 namespace fgfx {
 

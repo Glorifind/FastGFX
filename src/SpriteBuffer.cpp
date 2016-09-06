@@ -5,7 +5,7 @@
 #include "SpriteBuffer.h"
 #include "SpriteLayer.h"
 #include <cmath>
-#include <emscripten.h>
+#include "config.h"
 
 #define SQRT_2 1.41421356237
 #define INV_SQRT_2 0.70710678118

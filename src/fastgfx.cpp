@@ -7,14 +7,16 @@
 #include <vector>
 #include <memory>
 #include <fastgfx.h>
-#include <emscripten.h>
+#include "config.h"
 
 namespace fgfx {
   int init() {
+#ifdef EMSCRIPTEN
     EM_ASM(Module.initializeFastGfxRuntime());
-    emscripten_log(EM_LOG_ERROR, "ENGINE INITIALIZATION\n");
+    fgfx_log("ENGINE INITIALIZATION\n");
     fgfx::engine = std::make_shared<fgfx::Engine>();
     EM_ASM(Module.initializeFastGfxTextureManager());
+#endif
     return 0;
   }
 }
@@ -23,68 +25,68 @@ using namespace fgfx;
 
 extern "C" {
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 void fgfx_render(double time, float delta, int widthp, int heightp) {
   fgfx::engine->render(time, delta, widthp, heightp);
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 int fgfx_getSpritesToLoadCount() {
   return fgfx::engine->getSpritesToLoadCount();
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 fgfx::Sprite* fgfx_getSpriteToLoad(int id) {
   return fgfx::engine->getSpriteToLoad(id).get();
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 void fgfx_clearSpritesToLoad(int id) {
   fgfx::engine->clearSpritesToLoad();
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 fgfx::Sprite* fgfx_getSprite(const char* spriteName) {
   return fgfx::engine->getSprite(spriteName).get();
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 const char* fgfx_Sprite_getName(fgfx::Sprite* sprite) {
   return sprite->name.c_str();
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 void fgfx_Sprite_setTextureFragment(fgfx::Sprite* sprite, int textureIdp, float left, float top, float right, float bottom,
                                     int widthp, int heightp, bool preloaded) {
   sprite->setTextureFragment(textureIdp, left, top, right, bottom, widthp, heightp, preloaded);
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 int fgfx_getSpriteFontsToLoadCount() {
   return fgfx::engine->getSpriteFontsToLoadCount();
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 fgfx::SpriteFont* fgfx_getSpriteFontToLoad(int id) {
   return fgfx::engine->getSpriteFontToLoad(id).get();
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 void fgfx_clearSpriteFontsToLoad(int id) {
   fgfx::engine->clearSpriteFontsToLoad();
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 const char* fgfx_SpriteFont_getName(fgfx::SpriteFont* font) {
   return font->name.c_str();
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 void fgfx_SpriteFont_setHeight(fgfx::SpriteFont* font, float linep, float basep) {
   font -> setHeight(linep, basep);
 }
 
-EMSCRIPTEN_KEEPALIVE
+FGFX_API
 void fgfx_SpriteFont_setCharacter(fgfx::SpriteFont* font, unsigned short character, fgfx::Sprite* sprite,
                             float xSize, float ySize, float xOffset, float yOffset, float advance) {
   font -> setCharacter(character,sprite->shared_from_this(),glm::vec2(xSize,ySize),glm::vec2(xOffset,yOffset),advance);
