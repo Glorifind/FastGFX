@@ -36,4 +36,4 @@
 
 #endif
 
-#endif //BRICKS_CONFIG_H
+#endif //TANKS_CONFIG_H

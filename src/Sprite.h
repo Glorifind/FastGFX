@@ -9,9 +9,8 @@ namespace fgfx {
 
   class Sprite : public std::enable_shared_from_this<Sprite> {
     friend class SpriteBuffer;
-  protected:
-    glm::vec2 coords[4];
   public:
+    glm::vec2 coords[4];
     std::string name;
     int textureId;
     int width;
