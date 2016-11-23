@@ -83,8 +83,8 @@ namespace fgfx {
     linePointsCount++;
   }
   void LineLayer::bufferLine(glm::vec3 p1, glm::vec3 p2, glm::vec4 color) {
-    bufferPoint(p1,color);
-    bufferPoint(p2,color);
+    bufferPoint(p1, color);
+    bufferPoint(p2, color);
   }
 
   void LineLayer::reset() {

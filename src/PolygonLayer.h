@@ -42,6 +42,7 @@ namespace fgfx {
     ~PolygonLayer();
 
     void reserve(int pointCount);
+    void reserveMore(int pointCount);
 
     void bufferPoint(glm::vec3 pos, glm::vec4 color);
     void bufferTriangle(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec4 color);

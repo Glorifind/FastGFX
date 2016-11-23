@@ -71,6 +71,11 @@ namespace fgfx {
     polygonVertices.reserve(pointCount);
     polygonColors.reserve(pointCount);
   }
+  void PolygonLayer::reserveMore(int pointCount) {
+    polygonVertices.reserve(pointCount + polygonPointsCount);
+    polygonColors.reserve(pointCount + polygonPointsCount);
+  }
+
 
   void PolygonLayer::bufferPoint(glm::vec3 pos, glm::vec4 color) {
     if(frozen && uploaded) return;
