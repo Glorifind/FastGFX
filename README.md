@@ -1,10 +1,7 @@
 FastGFX Library
 ===============
 
-Fast stands for:
-
-- execution performance - running so fast
-- market access - JavaScript WebGL backend will give you fast access to customers
+Graphics rendering library optimized for speed.
 
 TODO
 ----
