@@ -18,12 +18,13 @@ namespace fgfx {
   }
 
   std::shared_ptr<Sprite> Engine::getSprite(std::string spriteName) {
-    fgfx_log("LOADING SPRITE!!! %s\n",spriteName.c_str());
     auto it = sprites.find(spriteName);
     if (it != sprites.end()) {
       std::shared_ptr<Sprite> sprite = it->second;
       if(sprite->unloaded) reloadSprite(sprite);
+      return sprite;
     }
+    fgfx_log("LOADING SPRITE!!! %s\n",spriteName.c_str());
     std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(spriteName);
     spritesToLoad.push_back(sprite);
     sprites[spriteName] = sprite;
