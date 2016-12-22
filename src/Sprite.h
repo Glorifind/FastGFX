@@ -19,6 +19,7 @@ namespace fgfx {
     int lastUseTime;
     bool preloaded;
     bool unloaded;
+    bool locked;
     Sprite(std::string namep);
     void setTextureFragment(int textureIdp, float left, float top, float right, float bottom, int widthp, int heightp,
                             bool preloadedp);

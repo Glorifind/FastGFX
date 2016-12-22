@@ -32,7 +32,6 @@ TextureManager.prototype.loadSprite = function(sprite) {
     loading.sprite = sprite
     return;
   }
-  var imageUrl = absUrlPattern.test(name) ? name : "sprites/particles/"+name+".png"
   var sprite = {
     coords: null,
     sprite: sprite,
@@ -41,8 +40,8 @@ TextureManager.prototype.loadSprite = function(sprite) {
     name: name,
     image: null
   }
-  this.loadingSprites.set(name,sprite)
-  this.loader.loadSpriteImage(name).then((image) => {
+  this.loadingSprites.set(name, sprite)
+  this.loader.loadSpriteImage("assets/"+name).then((image) => {
     //console.log("SPRITE LOADED",image)
     sprite.image = image
     var bigger = false
@@ -69,8 +68,8 @@ TextureManager.prototype.loadSprite = function(sprite) {
 TextureManager.prototype.loadSpriteFont = function(font) {
   var name = Module.Pointer_stringify(Module._fgfx_SpriteFont_getName(font))
   console.info("LOADING FONT",name)
-  var imagePromise = this.loader.loadFontImage(name)
-  var dataPromise = this.loader.loadFontData(name)
+  var imagePromise = this.loader.loadFontImage("assets/"+name)
+  var dataPromise = this.loader.loadFontData("assets/"+name)
   imagePromise.then((image)=> dataPromise.then((data)=> this.uploadPackedSpriteFont(font,data,image)))
 }
 TextureManager.prototype.reload = function() {

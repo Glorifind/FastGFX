@@ -12,6 +12,8 @@ namespace fgfx {
     GLuint shader;
     GLint compiled;
 
+    //printf("Loading shader: \n%s\n",shaderSrc);
+
     // Create the shader object
     shader = glCreateShader(type);
 

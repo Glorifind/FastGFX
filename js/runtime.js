@@ -59,13 +59,15 @@ window.Module.initializeFastGfxTextureManager = function() {
   textureManager = new TextureManager(gl,window.fgfxLoader)
 }
 
+var pixelRatio = window.devicePixelRatio || 1
 var animateFgfx = function(time,delta) {
   textureManager.reload()
   GLctx = gl
-  if( canvas.width != canvas.clientWidth || canvas.height != canvas.clientHeight ) {
-    canvas.width = canvas.clientWidth
-    canvas.height = canvas.clientHeight
-    gl.viewport( 0, 0, canvas.width, canvas.height )
+  if( canvas.width != canvas.clientWidth || canvas.height != canvas.clientHeight || window.devicePixelRatio != pixelRatio) {
+    pixelRatio = window.devicePixelRatio || 1
+    canvas.width = canvas.clientWidth * pixelRatio
+    canvas.height = canvas.clientHeight * pixelRatio
+    gl.viewport( 0, 0, canvas.width, canvas.height, canvas.clientWidth * 0.264, canvas.clientHeight * 0.264)
     console.log("CANVAS RESIZE")
   }
   window.Module._fgfx_render(time, delta, canvas.width, canvas.height)

@@ -15,7 +15,7 @@ namespace fgfx {
 
   void Sprite::setTextureFragment(int textureIdp, float left, float top, float right, float bottom, int widthp,
                                   int heightp, bool preloadedp) {
-    fgfx_log("SET TEXTURE FRAGMENT %s %d %d %d\n",name.c_str(),textureIdp,width,height);
+    //fgfx_log("SET TEXTURE FRAGMENT %d %s %d %d %d\n",(unsigned int)((unsigned long)this),name.c_str(),textureIdp,width,height);
     textureId = textureIdp;
     coords[0] = glm::vec2(left,bottom);
     coords[1] = glm::vec2(right,bottom);

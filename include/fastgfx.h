@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "../src/config.h"
 
 #include <memory>
 
@@ -21,7 +22,17 @@ namespace fgfx {
   class SpriteFont;
 
   int init();
+  void destroy();
   extern std::shared_ptr<Engine> engine;
+
+#ifdef USE_GLFW
+  extern GLFWwindow* glfwWindow;
+#endif
+
+#ifdef __ANDROID
+extern AAssetManager* assetManager;
+#endif
+
 }
 
 #include "../src/Sprite.h"

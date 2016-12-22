@@ -26,12 +26,21 @@ namespace fgfx {
       "  vColor = aVertexColor;\n"
       "}\n";
 
+#ifndef __USE_OPENGL
     const char fShaderStr[] =
       "precision mediump float;\n"\
       "varying vec4 vColor;\n"
       "void main() {\n"
       "  gl_FragColor = vColor;\n"
       "}\n";
+#endif
+#ifdef __USE_OPENGL
+    const char fShaderStr[] =
+      "varying vec4 vColor;\n"
+      "void main() {\n"
+      "  gl_FragColor = vColor;\n"
+      "}\n";
+#endif
 
     auto vertexShader = fgfx::loadShader(GL_VERTEX_SHADER, vShaderStr);
     auto fragmentShader = fgfx::loadShader(GL_FRAGMENT_SHADER, fShaderStr);

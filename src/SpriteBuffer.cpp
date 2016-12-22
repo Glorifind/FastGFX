@@ -13,14 +13,15 @@
 namespace fgfx {
   
   SpriteBuffer::SpriteBuffer(int textureIdp) : textureId(textureIdp) {
-    glGenBuffers(1,&positionBuffer);
-    glGenBuffers(1,&colorBuffer);
-    glGenBuffers(1,&coordBuffer);
+    glGenBuffers(1, &positionBuffer);
+    glGenBuffers(1, &colorBuffer);
+    glGenBuffers(1, &coordBuffer);
+    spritePointsCount = 0;
   }
   SpriteBuffer::~SpriteBuffer() {
-    glDeleteBuffers(1,&positionBuffer);
-    glDeleteBuffers(1,&colorBuffer);
-    glDeleteBuffers(1,&coordBuffer);
+    glDeleteBuffers(1, &positionBuffer);
+    glDeleteBuffers(1, &colorBuffer);
+    glDeleteBuffers(1, &coordBuffer);
   }
 
   void SpriteBuffer::reserve(int pointCount) {

@@ -9,6 +9,7 @@ namespace fgfx {
 
   SpriteLayer::SpriteLayer(Engine* enginep) : Layer(enginep) {
     composition=1;
+
   };
 
   SpriteBuffer* SpriteLayer::getBuffer(int textureId) {
@@ -57,15 +58,16 @@ namespace fgfx {
 
   void SpriteLayer::initializeSpriteProgram() {
 
+#ifndef __USE_OPENGL
     const char vShaderStr[] =
-        "attribute vec3 aVertexPosition;\n"\
+        "attribute vec3 aVertexPosition;\n"
         "attribute vec4 aVertexColor;\n"
         "attribute vec2 aTextureCoord;\n"
         "uniform mat4 uCameraMatrix;\n"
         "varying vec4 vColor;\n"
         "varying highp vec2 vTextureCoord;\n"
         "void main() {\n"
-        "  gl_Position =uCameraMatrix*vec4(aVertexPosition, 1.0);\n"
+        "  gl_Position = uCameraMatrix*vec4(aVertexPosition, 1.0);\n"
         "  vColor = aVertexColor;\n"
         "  vTextureCoord = aTextureCoord;\n"
         "}\n";
@@ -79,6 +81,31 @@ namespace fgfx {
         "  vec4 textureColor = texture2D(uSampler, vTextureCoord);\n"
         "  gl_FragColor = vColor*textureColor;\n"
         "}\n";
+#endif
+
+#ifdef __USE_OPENGL
+    const char vShaderStr[] =
+        "attribute vec3 aVertexPosition;\n"
+        "attribute vec4 aVertexColor;\n"
+        "attribute vec2 aTextureCoord;\n"
+        "uniform mat4 uCameraMatrix;\n"
+        "varying vec4 vColor;\n"
+        "varying vec2 vTextureCoord;\n"
+        "void main() {\n"
+        "  gl_Position = uCameraMatrix*vec4(aVertexPosition, 1.0);\n"
+        "  vColor = aVertexColor;\n"
+        "  vTextureCoord = aTextureCoord;\n"
+        "}\n";
+
+    const char fShaderStr[] =
+        "varying vec4 vColor;\n"\
+        "uniform sampler2D uSampler;\n"
+        "varying vec2 vTextureCoord;\n"
+        "void main() {\n"
+        "  vec4 textureColor = texture2D(uSampler, vTextureCoord);\n"
+        "  gl_FragColor = vColor*textureColor;\n"
+        "}\n";
+#endif
 
     auto vertexShader = fgfx::loadShader ( GL_VERTEX_SHADER, vShaderStr );
     auto fragmentShader = fgfx::loadShader ( GL_FRAGMENT_SHADER, fShaderStr );

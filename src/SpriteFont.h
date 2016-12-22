@@ -33,9 +33,7 @@ namespace fgfx {
     void setCharacter(unsigned short character, std::shared_ptr<Sprite> sprite, glm::vec2 size, glm::vec2 offset,
                       float advance);
     void renderString(std::shared_ptr<SpriteLayer> layer, glm::mat4 mat, glm::vec4 color, std::string text);
-    void renderColorCodedString(std::shared_ptr<SpriteLayer> layer, glm::mat4 mat, glm::vec4 color, std::string text);
     glm::vec2 measureString(std::string text);
-    glm::vec2 measureColorCodeString(std::string text);
   };
 
 }

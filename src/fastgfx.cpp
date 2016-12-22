@@ -9,24 +9,82 @@
 #include <fastgfx.h>
 #include "config.h"
 
+#ifndef EMSCRIPTEN
+#include <thread>
+#endif
+
 namespace fgfx {
+
+#ifdef __ANDROID
+  AAssetManager* assetManager;
+#endif
+
+#ifndef EMSCRIPTEN
+  std::thread loaderThread;
+  bool finished;
+  void imageLoader();
+#endif
+
+#ifdef USE_GLFW
+  GLFWwindow* glfwWindow;
+#endif
+
+  void destroy() {
+#ifdef USE_GLFW
+    //glfwDestroyWindow(fgfx::glfwWindow);
+    glfwTerminate();
+#endif
+#ifndef EMSCRIPTEN
+    finished = true;
+    if(loaderThread.joinable()) loaderThread.join();
+#endif
+  }
+
   int init() {
+#ifndef EMSCRIPTEN
+    finished = false;
+#endif
 #ifdef EMSCRIPTEN
     EM_ASM(Module.initializeFastGfxRuntime());
     fgfx_log("ENGINE INITIALIZATION\n");
     fgfx::engine = std::make_shared<fgfx::Engine>();
     EM_ASM(Module.initializeFastGfxTextureManager());
 #endif
+#ifdef USE_GLFW
+    if (!glfwInit()) {
+      fgfx_log("could not init glfw")
+      return -1;
+    }
+    glfwWindow = glfwCreateWindow(800, 600, "FGFX", NULL, NULL);
+    if (!glfwWindow) {
+      fgfx_log("could not create window")
+      return -1;
+    }
+
+    glfwMakeContextCurrent(glfwWindow);
+
+    fgfx::engine = std::make_shared<fgfx::Engine>();
+#endif
+#ifdef __ANDROID
+    fgfx::engine = std::make_shared<fgfx::Engine>();
+#endif
+#ifndef EMSCRIPTEN
+    loaderThread = std::thread(imageLoader);
+#endif
     return 0;
   }
 }
 
+
+#ifdef EMSCRIPTEN
 using namespace fgfx;
 
 extern "C" {
 
 FGFX_API
-void fgfx_render(double time, float delta, int widthp, int heightp) {
+void fgfx_render(double time, float delta, int widthp, int heightp, double rw, double rh) {
+  realWidth = rw;
+  realHeight = rh;
   fgfx::engine->render(time, delta, widthp, heightp);
 }
 
@@ -94,3 +152,5 @@ void fgfx_SpriteFont_setCharacter(fgfx::SpriteFont* font, unsigned short charact
 
 
 };
+
+#endif

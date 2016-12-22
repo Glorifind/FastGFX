@@ -51,15 +51,16 @@ Animator.prototype.animate = function() {
   if(!this.raf) this.raf=window.requestAnimationFrame(this.rafAnimate.bind(this))
 }
 Animator.prototype.rafAnimate = function(time) {
-  this.frameTime = performance.now()
+  //console.error("RAF ANIMATE!")
+  this.frameTime = now()
   this.raf = null
   this.lastRaf = this.frameTime
   this.animate()
 }
 Animator.prototype.lagAnimate = function() {
-  var ctime = performance.now()
+  var ctime = now()
   if((ctime - this.lastRaf) > 200) {
-    // console.error("LAG ANIMATE",ctime,this.lastRaf,ctime-this.lastRaf)
+    //console.error("LAG ANIMATE",ctime,this.lastRaf,ctime-this.lastRaf)
     this.lastRaf = ctime
     this.frameTime = ctime
     this.animate()

@@ -5,5 +5,5 @@ make
 
 cd js
   npm install
-  node build-js.js
+  webpack
 cd ..
