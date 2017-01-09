@@ -85,15 +85,6 @@ namespace fgfx {
     polygonColors.reserve(pointCount + polygonPointsCount);
   }
 
-
-  void PolygonLayer::bufferPoint(glm::vec3 pos, glm::vec4 color) {
-    if(frozen && uploaded) return;
-    /*emscripten_log(EM_LOG_ERROR,"BUFFER POLYGON POINT %d (%f %f %f) COLOR (%f %f %f %f)\n",polygonPointsCount,
-                   pos.x,pos.y,pos.z,color.r,color.g,color.b,color.a);*/
-    polygonVertices.push_back(pos);
-    polygonColors.push_back(color);
-    polygonPointsCount++;
-  }
   void PolygonLayer::bufferTriangle(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec4 color) {
     bufferPoint(p1,color);
     bufferPoint(p2,color);

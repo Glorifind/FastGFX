@@ -1,7 +1,7 @@
 #ifndef EMSCRIPTEN
 
-#ifndef TANKS_TEXTUREMANAGER_H
-#define TANKS_TEXTUREMANAGER_H
+#ifndef FGFX_TEXTUREMANAGER_H
+#define FGFX_TEXTUREMANAGER_H
 
 #include "SpritesTexture.h"
 
@@ -11,11 +11,18 @@
 
 namespace fgfx {
 
+  class TextureInfo {
+  public:
+    std::shared_ptr<Texture> texture;
+    std::shared_ptr<Image> image;
+  };
+
   class TextureManager {
   public:
 
     /// TODO HTTP sprites support, loading sprites map
     std::map<std::string, SpriteInfo> loadedSprites;
+    std::map<std::string, TextureInfo> loadedTextures;
 
     int maxSize;
     int spacing;
@@ -27,6 +34,7 @@ namespace fgfx {
 
     void loadSprite(std::shared_ptr<Sprite> sprite);
     void loadSpriteFont(std::shared_ptr<SpriteFont> sprite);
+    void loadTexture(std::shared_ptr<Texture> texture);
 
     void clean();
 
@@ -34,5 +42,5 @@ namespace fgfx {
 
 }
 
-#endif //TANKS_TEXTUREMANAGER_H
+#endif //FGFX_TEXTUREMANAGER_H
 #endif //EMSCRIPTEN

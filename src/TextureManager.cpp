@@ -17,7 +17,6 @@ namespace fgfx {
 
   }
 
-
   void TextureManager::loadSprite(std::shared_ptr<Sprite> sprite) {
     auto it = loadedSprites.find(sprite->name);
     if(it != loadedSprites.end()) {
@@ -71,9 +70,31 @@ namespace fgfx {
       spriteTextures.push_back(ntex);
       ntex->tryAddSprite(info);
     }
+    loadedSprites[sprite->name] = info;
   }
   void TextureManager::loadSpriteFont(std::shared_ptr<SpriteFont> sprite) {
 
+  }
+  void TextureManager::loadTexture(std::shared_ptr<Texture> texture) {
+    if(texture->name.size() == 0 ) throw PngError();
+    auto it = loadedTextures.find(texture->name);
+    if(it != loadedTextures.end()) {
+      TextureInfo& info = it->second;
+      info.texture = texture;
+      fgfx::engine->uploadQueue.enqueue([=]{
+        texture->upload(info.image->width, info.image->height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, info.image->data);
+      });
+      return;
+    }
+    TextureInfo info;
+    std::shared_ptr<Image> image = decodePngImage(loadBuffer(texture->name));
+    info.image = image;
+    info.texture = texture;
+    fgfx::engine->uploadQueue.enqueue([=]{
+      texture->upload(info.image->width, info.image->height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, info.image->data);
+    });
+    loadedTextures[texture->name] = info;
+    return;
   }
 
   void TextureManager::clean() {

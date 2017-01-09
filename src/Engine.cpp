@@ -11,6 +11,8 @@ namespace fgfx {
     SpriteLayer::initializeSpriteProgram();
     LineLayer::initializeLineProgram();
     PolygonLayer::initializePolygonProgram();
+    TexturedLayer::initializeTexturedProgram();
+    TextureTransitionLayer::initializeTextureTransitionProgram();
 
     renderTime = 0;
   }
@@ -48,6 +50,39 @@ namespace fgfx {
     spritep->unloaded=false;
   }
 
+  void Engine::reloadTexture(std::shared_ptr<Texture> texturep) {
+    if(texturep->name.size() == 0) throw "WTF?!";
+#ifdef EMSCRIPTEN
+    texturesToLoad.push_back(texturep);
+#else
+    LoadTask task = { .type = AssetType::Texture, .path = texturep->name};
+    loadQueue.enqueue(task);
+#endif
+    texturep->unloaded=false;
+  }
+  
+  std::shared_ptr<Texture> Engine::getTexture(std::string textureName) {
+    auto it = textures.find(textureName);
+    if (it != textures.end()) {
+      std::shared_ptr<Texture> texture = it->second;
+      if(texture->unloaded) reloadTexture(texture);
+      return texture;
+    }
+    fgfx_log("LOADING TEXTURE!!! %s\n",textureName.c_str());
+    std::shared_ptr<Texture> texture = std::make_shared<Texture>(textureName);
+#ifdef EMSCRIPTEN
+    texturesToLoad.push_back(texture);
+#else
+    LoadTask task = { .type = AssetType::Texture, .path = textureName};
+    loadQueue.enqueue(task);
+#endif
+    textures[textureName] = texture;
+    return texture;
+  }
+  std::shared_ptr<Texture> Engine::createEmptyTexture(int width, int height, GLint internalFormat, GLenum format, GLenum type) {
+    return std::make_shared<Texture>(width, height, internalFormat, format, type);
+  }
+
   std::shared_ptr<SpriteFont> Engine::getSpriteFont(std::string spriteFontName) {
     auto it = spriteFonts.find(spriteFontName);
     if (it != spriteFonts.end()) return it->second;
@@ -81,6 +116,15 @@ namespace fgfx {
   void Engine::clearSpriteFontsToLoad() {
     spriteFontsToLoad.clear();
   }
+  int Engine::getTexturesToLoadCount() {
+    return texturesToLoad.size();
+  }
+  std::shared_ptr<Texture> Engine::getTextureToLoad(int n) {
+    return texturesToLoad[n];
+  }
+  void Engine::clearTexturesToLoad() {
+    texturesToLoad.clear();
+  }
 #endif
 
   void Engine::setRenderFunction(std::function<void(float,float)> renderFunctionp) {
@@ -110,6 +154,12 @@ namespace fgfx {
   }
   std::shared_ptr<LineLayer> Engine::createLineLayer() {
     return std::make_shared<LineLayer>(this);
+  }
+  std::shared_ptr<TexturedLayer> Engine::createTexturedLayer() {
+    return std::make_shared<TexturedLayer>(this);
+  }
+  std::shared_ptr<TextureTransitionLayer> Engine::createTextureTransitionLayer() {
+    return std::make_shared<TextureTransitionLayer>(this);
   }
 
 #ifdef USE_GLFW

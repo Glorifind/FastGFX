@@ -20,6 +20,9 @@ namespace fgfx {
   class Sprite;
   class PolygonLayer;
   class SpriteFont;
+  class Texture;
+  class TexturedLayer;
+  class TextureTransitionLayer;
 
   int init();
   void destroy();
@@ -42,6 +45,8 @@ extern AAssetManager* assetManager;
 #include "../src/Layer.h"
 #include "../src/PolygonLayer.h"
 #include "../src/SpriteFont.h"
-
+#include "../src/Texture.h"
+#include "../src/TexturedLayer.h"
+#include "../src/TextureTransitionLayer.h"
 
 #endif //ENGINE_FGFX_H

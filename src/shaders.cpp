@@ -38,7 +38,7 @@ namespace fgfx {
         char *infoLog = new char[infoLen];
 
         glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
-        printf("Error compiling shader:\n%s\n", infoLog);
+        fgfx_log("Error compiling shader:\n%s\n", infoLog);
 
         delete[] infoLog;
       }

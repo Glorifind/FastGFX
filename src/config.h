@@ -8,7 +8,7 @@
 #ifdef EMSCRIPTEN
 
   #include <emscripten.h>
-  #define fgfx_log(...) emscripten_log(EM_LOG_ERROR, __VA_ARGS__)
+  #define fgfx_log(...) emscripten_log(EM_LOG_ERROR, __VA_ARGS__);
   #define FGFX_API EMSCRIPTEN_KEEPALIVE
 
 #endif

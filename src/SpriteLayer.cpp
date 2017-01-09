@@ -9,7 +9,6 @@ namespace fgfx {
 
   SpriteLayer::SpriteLayer(Engine* enginep) : Layer(enginep) {
     composition=1;
-
   };
 
   SpriteBuffer* SpriteLayer::getBuffer(int textureId) {
@@ -158,7 +157,7 @@ namespace fgfx {
     glActiveTexture(GL_TEXTURE0);
     glDisable(GL_CULL_FACE);
     for(auto it = buffers.begin(); it!=buffers.end(); ++it) {
-      SpriteBuffer* buffer=*it;
+      SpriteBuffer* buffer = *it;
       glBindTexture(GL_TEXTURE_2D, buffer->textureId);
       glUniform1i(SpriteLayer::spriteProgramUniformSampler, 0);
       buffer->render();

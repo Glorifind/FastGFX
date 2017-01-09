@@ -83,8 +83,8 @@ extern "C" {
 
 FGFX_API
 void fgfx_render(double time, float delta, int widthp, int heightp, double rw, double rh) {
-  realWidth = rw;
-  realHeight = rh;
+  fgfx::engine->realWidth = rw;
+  fgfx::engine->realHeight = rh;
   fgfx::engine->render(time, delta, widthp, heightp);
 }
 
@@ -150,6 +150,36 @@ void fgfx_SpriteFont_setCharacter(fgfx::SpriteFont* font, unsigned short charact
   font -> setCharacter(character,sprite->shared_from_this(),glm::vec2(xSize,ySize),glm::vec2(xOffset,yOffset),advance);
 }
 
+
+FGFX_API
+int fgfx_getTexturesToLoadCount() {
+  return fgfx::engine->getTexturesToLoadCount();
+}
+
+FGFX_API
+fgfx::Texture* fgfx_getTextureToLoad(int id) {
+  return fgfx::engine->getTextureToLoad(id).get();
+}
+
+FGFX_API
+void fgfx_clearTexturesToLoad(int id) {
+  fgfx::engine->clearTexturesToLoad();
+}
+
+FGFX_API
+fgfx::Texture* fgfx_getTexture(const char* textureName) {
+  return fgfx::engine->getTexture(textureName).get();
+}
+
+FGFX_API
+const char* fgfx_Texture_getName(fgfx::Texture* texture) {
+  return texture->name.c_str();
+}
+
+FGFX_API
+void fgfx_Texture_setTexture(fgfx::Texture* texture, int textureId) {
+  texture->texture = textureId;
+}
 
 };
 

@@ -11,7 +11,6 @@
 namespace fgfx {
   extern bool finished;
 
-
   std::string loadBuffer(std::string path) {
     fgfx_log("READING FILE %s", path.c_str());
 #ifdef __ANDROID
