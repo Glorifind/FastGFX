@@ -28,7 +28,8 @@ namespace fgfx {
   }
 
   void loadSpriteFont(std::string path) {
-
+    std::shared_ptr<SpriteFont> spriteFont = fgfx::engine->getSpriteFont(path);
+    textureManager.loadSpriteFont(spriteFont);
   }
 
   void imageLoader() {

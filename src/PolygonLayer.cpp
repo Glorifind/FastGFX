@@ -135,6 +135,15 @@ namespace fgfx {
 
     uploaded=true;
   }
+
+  void PolygonLayer::draw() {
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glVertexAttribPointer(PolygonLayer::polygonProgramAttribPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glVertexAttribPointer(PolygonLayer::polygonProgramAttribColor, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glDrawArrays(GL_TRIANGLES, 0, polygonPointsCount);
+  }
   void PolygonLayer::render(glm::mat4 cameraMatrix) {
     if(!polygonPointsCount) return;
 

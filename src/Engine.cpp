@@ -21,6 +21,18 @@ namespace fgfx {
 
   }
 
+  std::shared_ptr<Sprite> Engine::getEmptySprite(std::string spriteName) {
+    auto it = sprites.find(spriteName);
+    if (it != sprites.end()) {
+      std::shared_ptr<Sprite> sprite = it->second;
+      if(sprite->unloaded) reloadSprite(sprite);
+      return sprite;
+    }
+    std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(spriteName);
+    sprites[spriteName] = sprite;
+    return sprite;
+  }
+
   std::shared_ptr<Sprite> Engine::getSprite(std::string spriteName) {
     auto it = sprites.find(spriteName);
     if (it != sprites.end()) {
@@ -28,8 +40,8 @@ namespace fgfx {
       if(sprite->unloaded) reloadSprite(sprite);
       return sprite;
     }
-    fgfx_log("LOADING SPRITE!!! %s\n",spriteName.c_str());
     std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(spriteName);
+    fgfx_log("LOADING SPRITE!!! %s\n",spriteName.c_str());
 #ifdef EMSCRIPTEN
     spritesToLoad.push_back(sprite);
 #else

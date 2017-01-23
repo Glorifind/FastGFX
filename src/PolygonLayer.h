@@ -15,7 +15,7 @@
 namespace fgfx {
 
   class PolygonLayer : public Layer {
-  protected:
+  public:
     std::vector<glm::vec3> polygonVertices;
     std::vector<glm::vec4> polygonColors;
     int polygonPointsCount;
@@ -23,6 +23,7 @@ namespace fgfx {
     GLuint positionBuffer;
     GLuint colorBuffer;
 
+  protected:
     friend class Engine;
 
     static GLuint polygonProgram;
@@ -31,8 +32,7 @@ namespace fgfx {
     static GLuint polygonProgramUniformCameraMatrix;
 
     static void initializePolygonProgram();
-    void beginDraw(glm::mat4 cameraMatrix);
-    void endDraw();
+    
   public:
     int composition;
     bool wireframe;
@@ -62,6 +62,10 @@ namespace fgfx {
     virtual void reset() override;
     virtual void upload() override;
     virtual void render(glm::mat4 cameraMatrix) override;
+
+    static void beginDraw(glm::mat4 cameraMatrix);
+    static void endDraw();
+    void draw();
   };
 
 }

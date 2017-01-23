@@ -72,6 +72,7 @@ namespace fgfx {
     ~Engine();
 
     std::shared_ptr<Sprite> getSprite(std::string spriteName);
+    std::shared_ptr<Sprite> getEmptySprite(std::string spriteName);
     std::shared_ptr<SpriteFont> getSpriteFont(std::string spriteFontName);
     std::shared_ptr<Texture> getTexture(std::string texture);
     std::shared_ptr<Texture> createEmptyTexture(int width, int height, GLint internalFormat, GLenum format, GLenum type);

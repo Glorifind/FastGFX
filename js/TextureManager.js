@@ -18,11 +18,11 @@ var TextureManager = function(gl,loader) {
 var absUrlPattern = /^https?:\/\//i
 TextureManager.prototype.loadSprite = function(sprite) {
   var name = Module.Pointer_stringify(Module._fgfx_Sprite_getName(sprite))
-  console.debug("SPRITE REQUESTED",name,sprite)
+  console.debug("SPRITE REQUESTED", name, sprite)
   var loaded = this.loadedSprites.get(name)
   if(loaded) {
-    console.debug("SPRITE LOAD AND PUSH",name)
-    Module._fgfx_Sprite_setTextureFragment(loaded.sprite,loaded.texture,
+    console.debug("SPRITE LOAD AND PUSH", name)
+    Module._fgfx_Sprite_setTextureFragment(loaded.sprite, loaded.texture,
       loaded.coords.xmin, loaded.coords.ymin, loaded.coords.xmax, loaded.coords.ymax,
       loaded.coords.width, loaded.coords.height, loaded.preloaded || false)
     return;
@@ -68,9 +68,32 @@ TextureManager.prototype.loadSprite = function(sprite) {
 TextureManager.prototype.loadSpriteFont = function(font) {
   var name = Module.Pointer_stringify(Module._fgfx_SpriteFont_getName(font))
   console.info("LOADING FONT",name)
-  var imagePromise = this.loader.loadFontImage("assets/"+name)
-  var dataPromise = this.loader.loadFontData("assets/"+name)
+  var imagePromise = this.loader.loadFontImage("assets/" + name)
+  var dataPromise = this.loader.loadFontData("assets/" + name)
   imagePromise.then((image)=> dataPromise.then((data)=> this.uploadPackedSpriteFont(font,data,image)))
+}
+TextureManager.prototype.loadTexture = function(texture) {
+  var name = Module.Pointer_stringify(Module._fgfx_Texture_getName(texture))
+  var imagePromise = this.loader.loadTextureImage("assets/" + name)
+  imagePromise.then((image) => {
+    var textureId = Module._fgfx_Texture_getTexture(texture);
+    var tex
+    if(textureId == -1) {
+      tex = gl.createTexture()
+      while(GL.textures.length==0) GL.textures.push(null)
+      textureId = GL.textures.length
+      GL.textures[textureId] = tex
+      Module._fgfx_Texture_setTexture(textureId)
+    } else {
+      tex = GL.textures[textureId]
+    }
+    var gl = this.gl
+    gl.bindTexture(gl.TEXTURE_2D, tex)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
+    gl.generateMipmap(gl.TEXTURE_2D);
+  })
 }
 TextureManager.prototype.reload = function() {
   var cnt = Module._fgfx_getSpritesToLoadCount()
@@ -90,6 +113,13 @@ TextureManager.prototype.reload = function() {
   for (var i = 0; i < this.spriteTextures.length; i++) {
     this.spriteTextures[i].upload()
   }
+
+  var cnt = Module._fgfx_getTexturesToLoadCount()
+  for(var i=0; i<cnt; i++) {
+    var texture = Module._fgfx_getTextureToLoad(i)
+    this.loadTexture(texture)
+  }
+  Module._fgfx_clearTexturesToLoad()
 }
 TextureManager.prototype.clean = function(engineTime) {
   for (var i = 0; i < this.spriteTextures.length; i++) {
