@@ -80,7 +80,7 @@ namespace fgfx {
   int lastFileLoad = 0;
   std::map<int, std::function<void(std::string)>> fileLoadCallbacks;
   extern "C" {
-    void fgfx_fileLoaded(int id, const char* data, int length) {
+    FGFX_API void fgfx_fileLoaded(int id, const char* data, int length) {
       fileLoadCallbacks[id](std::string(data,length));
       fileLoadCallbacks.erase(id);
     }
