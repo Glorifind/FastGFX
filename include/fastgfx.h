@@ -11,6 +11,7 @@
 #include "../src/config.h"
 
 #include <memory>
+#include <functional>
 
 namespace fgfx {
   class Engine;
@@ -36,6 +37,7 @@ namespace fgfx {
 extern AAssetManager* assetManager;
 #endif
 
+  void loadFile(std::string path, std::function<void(std::string)>);
 }
 
 #include "../src/Sprite.h"

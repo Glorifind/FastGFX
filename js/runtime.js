@@ -2,7 +2,10 @@ import { TextureManager } from "./TextureManager.js"
 import { Animator } from "./Animator.js"
 
 var canvas = document.getElementById('fgfx_canvas')
-var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+var glAttrs = {
+  alpha: true
+}
+var gl = canvas.getContext('webgl', glAttrs) || canvas.getContext('experimental-webgl', glAttrs)
 
 var animator = new Animator(false)
 
@@ -47,7 +50,8 @@ window.fgfxLoader = window.fgfxLoader || {
     loadSpriteImage: loadImage,
     loadTextureImage: loadImage,
     loadFontData: (name) => loadText(name + '.fnt'),
-    loadFontImage: (name) => loadImage(name + '.png')
+    loadFontImage: (name) => loadImage(name + '.png'),
+    loadFile: (name) => loadText(name)
   }
 
 window.Module = window.Module || {}
