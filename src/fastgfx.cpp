@@ -99,7 +99,7 @@ namespace fgfx {
       window.fgfxLoader.loadFile("assets/"+name).then(function(result) {
         var buffer = Module._malloc(result.length);
         Module.writeStringToMemory(result, buffer);
-        Module._fgfx_fileLoaded($0, buffer, result.length);
+        Module._fgfx_fileLoaded($1, buffer, result.length);
         Module._free(buffer);
       }, function(error) {
         throw error;
