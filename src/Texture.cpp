@@ -12,6 +12,9 @@ namespace fgfx {
     unloaded = false;
     GLuint tex;
     glGenTextures(1, &tex);
+    unsigned char zeros[4] = {0, 0, 0, 0};
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, zeros);
     texture = tex;
     initialized = true;
   };
