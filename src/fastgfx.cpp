@@ -55,6 +55,8 @@ namespace fgfx {
       fgfx_log("could not init glfw")
       return -1;
     }
+    glfwWindowHint(GLFW_ALPHA_BITS, 8);
+
     glfwWindow = glfwCreateWindow(800, 600, "FGFX", NULL, NULL);
     if (!glfwWindow) {
       fgfx_log("could not create window")
@@ -73,8 +75,39 @@ namespace fgfx {
 #endif
     return 0;
   }
-}
 
+#ifdef EMSCRIPTEN
+  int lastFileLoad = 0;
+  std::map<int, std::function<void(std::string)>> fileLoadCallbacks;
+  extern "C" {
+    FGFX_API void fgfx_fileLoaded(int id, const char* data, int length) {
+      fileLoadCallbacks[id](std::string(data,length));
+      fileLoadCallbacks.erase(id);
+    }
+  }
+#endif
+
+  void loadFile(std::string path, std::function<void(std::string)> cb) {
+#ifndef EMSCRIPTEN
+    cb(loadBuffer(path));
+#endif
+#ifdef EMSCRIPTEN
+    lastFileLoad++;
+    fileLoadCallbacks[lastFileLoad] = cb;
+    EM_ASM_INT({
+      var name = Module.Pointer_stringify($0);
+      window.fgfxLoader.loadFile("assets/"+name).then(function(result) {
+        var buffer = Module._malloc(result.length);
+        Module.writeStringToMemory(result, buffer);
+        Module._fgfx_fileLoaded($1, buffer, result.length);
+        Module._free(buffer);
+      }, function(error) {
+        throw error;
+      });
+    }, path.c_str(), lastFileLoad);
+#endif
+  }
+}
 
 #ifdef EMSCRIPTEN
 using namespace fgfx;

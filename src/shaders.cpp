@@ -20,17 +20,17 @@ namespace fgfx {
 
   GLuint loadShader(GLenum type, std::string shaderSrc) {
 #ifdef __USE_OPENGL
-    replaceAll(shaderSrc,"precision highp float;","");
-    replaceAll(shaderSrc,"precision mediump float;","");
-    replaceAll(shaderSrc,"precision lowp float;","");
-    replaceAll(shaderSrc,"highp ","");
-    replaceAll(shaderSrc,"mediump ","");
-    replaceAll(shaderSrc,"lowp ","");
+    replaceAll(shaderSrc, "precision highp float;", "");
+    replaceAll(shaderSrc, "precision mediump float;", "");
+    replaceAll(shaderSrc, "precision lowp float;", "");
+    replaceAll(shaderSrc, "highp ", "");
+    replaceAll(shaderSrc, "mediump ", "");
+    replaceAll(shaderSrc, "lowp ", "");
 #endif
     GLuint shader;
     GLint compiled;
 
-    //printf("Loading shader: \n%s\n",shaderSrc);
+    //fgfx_log("Loading shader: \n%s\n", shaderSrc.c_str());
 
     // Create the shader object
     shader = glCreateShader(type);

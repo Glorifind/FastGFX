@@ -25,7 +25,7 @@
 #ifndef __ANDROID
 
   #include <stdio.h>
-  #define fgfx_log(...) printf(__VA_ARGS__); printf("\n");
+  #define fgfx_log(...) { printf(__VA_ARGS__); printf("\n"); }
   #define FGFX_API
 
 #endif
