@@ -15,6 +15,7 @@ namespace fgfx {
   public:
     std::string name;
     int texture;
+    bool initialized;
     bool unloaded;
     int width;
     int height;
@@ -26,8 +27,11 @@ namespace fgfx {
     GLint old_fbo;
     GLint old_viewport[4];
 
+    Texture();
     Texture(std::string namep);
+    Texture(std::string namep, GLuint tex);
     Texture(int widthp, int heightp, GLint internalFormatp, GLenum formatp, GLenum typep);
+    Texture(int widthp, int heightp, GLint internalFormatp, GLenum formatp, GLenum typep, GLuint tex);
     void upload(int widthp, int heightp, GLint internalFormatp, GLenum formatp, GLenum typep, void* buffer);
 
     void resize(int widthp, int heightp);

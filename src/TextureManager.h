@@ -11,16 +11,22 @@
 
 namespace fgfx {
 
-  class TextureInfo {
-  public:
+  struct TextureInfo {
     std::shared_ptr<Texture> texture;
     std::shared_ptr<Image> image;
+  };
+
+  struct SpriteFontInfo {
+    std::shared_ptr<SpriteFont> font;
+    std::shared_ptr<Image> image;
+    std::string data;
   };
 
   class TextureManager {
   public:
 
     /// TODO HTTP sprites support, loading sprites map
+    std::map<std::string, SpriteFontInfo> loadedSpriteFonts;
     std::map<std::string, SpriteInfo> loadedSprites;
     std::map<std::string, TextureInfo> loadedTextures;
 

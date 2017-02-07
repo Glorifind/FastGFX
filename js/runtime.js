@@ -45,6 +45,7 @@ var loadText = function(url) {
 
 window.fgfxLoader = window.fgfxLoader || {
     loadSpriteImage: loadImage,
+    loadTextureImage: loadImage,
     loadFontData: (name) => loadText(name + '.fnt'),
     loadFontImage: (name) => loadImage(name + '.png')
   }

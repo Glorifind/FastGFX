@@ -15,7 +15,7 @@
 
 namespace fgfx {
 
-  class TexturedBuffer {
+  class PBRTextureBuffer {
   protected:
     std::vector<glm::vec3> texturedVertices;
     std::vector<glm::vec4> texturedColors;
@@ -33,8 +33,8 @@ namespace fgfx {
   public:
     int textureId;
 
-    TexturedBuffer(int textureIdp);
-    ~TexturedBuffer();
+    PBRTextureBuffer(int textureIdp);
+    ~PBRTextureBuffer();
 
     void reserve(int pointCount);
     void bufferPoint(glm::vec3 pos, glm::vec4 color, glm::vec2 coord);

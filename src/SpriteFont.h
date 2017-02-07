@@ -25,6 +25,7 @@ namespace fgfx {
 
     float lineHeight;
     float baseLine;
+    glm::vec2 scale;
 
     SpriteFont(std::string namep);
     ~SpriteFont();

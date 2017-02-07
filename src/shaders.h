@@ -6,11 +6,11 @@
 #define ENGINE_SHADERS_H
 
 #include "config.h"
+#include <string>
 
 namespace fgfx {
 
-
-  GLuint loadShader ( GLenum type, const char *shaderSrc);
+  GLuint loadShader ( GLenum type, std::string shaderSrc);
   GLuint createProgram( GLuint vertexShader, GLuint fragmentShader);
 
 }

@@ -48,5 +48,6 @@ extern AAssetManager* assetManager;
 #include "../src/Texture.h"
 #include "../src/TexturedLayer.h"
 #include "../src/TextureTransitionLayer.h"
+#include "../src/Image.h"
 
 #endif //ENGINE_FGFX_H

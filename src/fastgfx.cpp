@@ -179,6 +179,13 @@ const char* fgfx_Texture_getName(fgfx::Texture* texture) {
 FGFX_API
 void fgfx_Texture_setTexture(fgfx::Texture* texture, int textureId) {
   texture->texture = textureId;
+  texture->initialized = true;
+}
+
+FGFX_API
+int fgfx_Texture_getTexture(fgfx::Texture* texture) {
+  if(!texture->initialized) return -1;
+  return texture->texture;
 }
 
 };

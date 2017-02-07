@@ -10,8 +10,46 @@ namespace fgfx {
     texture = -1;
     framebuffer = -1;
     unloaded = false;
+    GLuint tex;
+    glGenTextures(1, &tex);
+    texture = tex;
+    initialized = true;
+  };
+  Texture::Texture(std::string namep, GLuint tex) : name(namep) {
+    texture = -1;
+    framebuffer = -1;
+    unloaded = false;
+    initialized = true;
+    texture = tex;
   };
 
+  Texture::Texture() {
+    texture = -1;
+    framebuffer = -1;
+    unloaded = false;
+    GLuint tex;
+    glGenTextures(1, &tex);
+    texture = tex;
+    initialized = true;
+  };
+
+  Texture::Texture(int widthp, int heightp, GLint internalFormatp, GLenum formatp, GLenum typep, GLuint tex) {
+    width = widthp;
+    height = heightp;
+    unloaded = false;
+    framebuffer = -1;
+    internalFormat = internalFormatp;
+    format = formatp;
+    type = typep;
+    texture = tex;
+    initialized = true;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  }
   Texture::Texture(int widthp, int heightp, GLint internalFormatp, GLenum formatp, GLenum typep) {
     width = widthp;
     height = heightp;
@@ -23,6 +61,7 @@ namespace fgfx {
     GLuint tex;
     glGenTextures(1, &tex);
     texture = tex;
+    initialized = true;
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -38,9 +77,11 @@ namespace fgfx {
     format = formatp;
     type = typep;
     unloaded = false;
-    GLuint tex;
-    glGenTextures(1, &tex);
-    texture = tex;
+    if(!initialized) {
+      GLuint tex;
+      glGenTextures(1, &tex);
+      texture = tex;
+    }
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, buffer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

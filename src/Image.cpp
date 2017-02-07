@@ -12,7 +12,7 @@ namespace fgfx {
   extern bool finished;
 
   std::string loadBuffer(std::string path) {
-    fgfx_log("READING FILE %s", path.c_str());
+    //fgfx_log("READING FILE %s", path.c_str());
 #ifdef __ANDROID
     AAsset* asset = AAssetManager_open(fgfx::assetManager, path.c_str(), AASSET_MODE_UNKNOWN);
     if (NULL == asset) {
@@ -98,6 +98,19 @@ namespace fgfx {
     png_uint_32 retval = png_get_IHDR(png_ptr, info_ptr, &width, &height, &bitDepth, &colorType, NULL, NULL, NULL);
     if(retval != 1) throw new PngError();
 
+    if (colorType == PNG_COLOR_TYPE_PALETTE)
+      png_set_expand(png_ptr);
+    if (colorType == PNG_COLOR_TYPE_GRAY && bitDepth < 8)
+      png_set_expand(png_ptr);
+    if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+      png_set_expand(png_ptr);
+    if (colorType == PNG_COLOR_TYPE_GRAY ||
+        colorType == PNG_COLOR_TYPE_GRAY_ALPHA)
+      png_set_expand_gray_1_2_4_to_8(png_ptr);
+
+    png_read_update_info (png_ptr, info_ptr);
+    png_get_IHDR(png_ptr, info_ptr, &width, &height, &bitDepth, &colorType, NULL, NULL, NULL);
+
     std::shared_ptr<Image> image = std::make_shared<Image>(width, height);
     switch(colorType)
     {
@@ -126,6 +139,30 @@ namespace fgfx {
   void Image::clear() {
     memset(data, 0,  width*height*sizeof(Color));
   }
+  void Image::clear(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+    Color* p = data;
+    Color* e = data + (width * height);
+    while(p < e) {
+      p->r = r;
+      p->g = g;
+      p->b = b;
+      p->a = a;
+      p++;
+    }
+  }
+
+  void Image::clearRect(int xmin, int ymin, int xmax, int ymax,
+                        unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+    for(int y = ymin; y <= ymax; y++)
+      for(int x = xmin; x <= xmax; x++) {
+        Color& pixel = data[y * width + x];
+        pixel.r = r;
+        pixel.g = g;
+        pixel.b = b;
+        pixel.a = a;
+      }
+  }
+
   void Image::put(std::shared_ptr<Image> src, int x, int y) {
     int sw = src->width;
     int sh = src->height;
@@ -140,6 +177,10 @@ namespace fgfx {
         dest_data[dy * dw + dx] = src_data[sy * sw + sx];
       }
     }
+  }
+
+  std::shared_ptr<Image> loadPng(std::string path) {
+    return decodePngImage(loadBuffer(path));
   }
 }
 

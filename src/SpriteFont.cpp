@@ -11,7 +11,7 @@
 namespace fgfx {
 
   SpriteFont::SpriteFont(std::string namep) : name(namep) {
-
+    scale = glm::vec2(1,1);
   }
   SpriteFont::~SpriteFont() {
 

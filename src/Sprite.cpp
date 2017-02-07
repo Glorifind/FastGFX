@@ -5,7 +5,7 @@
 
 namespace fgfx {
 
-  Sprite::Sprite(std::string namep) : name(namep), textureId(-1), width(0), height(0) {
+  Sprite::Sprite(std::string namep) : name(namep), textureId(-1), width(0), height(0), unloaded(false) {
   }
 
   std::string Sprite::getSpriteName() {
