@@ -18,11 +18,11 @@ namespace fgfx {
 
   class TexturedLayer : public Layer {
   protected:
-    std::vector<PBRTextureBuffer*> buffers;
-    PBRTextureBuffer* getBuffer(int textureId);
+    std::vector<TexturedBuffer*> buffers;
+    TexturedBuffer* getBuffer(int textureId);
 
     friend class Engine;
-    friend class PBRTextureBuffer;
+    friend class TexturedBuffer;
 
     static GLuint texturedProgram;
     static GLuint texturedProgramAttribPosition;
@@ -39,7 +39,7 @@ namespace fgfx {
 
     void bufferTexturedPoint(const std::shared_ptr<Texture>& texture, glm::vec2 point, glm::vec2 coord, glm::vec4 color);
     void bufferTexturedPoint(const std::shared_ptr<Texture>& texture, glm::vec3 point, glm::vec2 coord, glm::vec4 color);
-    PBRTextureBuffer* getBuffer(const std::shared_ptr<Texture>& texture);
+    TexturedBuffer* getBuffer(const std::shared_ptr<Texture>& texture);
 
     virtual void reset() override ;
     virtual void upload() override ;

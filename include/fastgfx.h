@@ -2,8 +2,8 @@
 // Created by Michał Łaszczewski on 01/07/16.
 //
 
-#ifndef ENGINE_FGFX_H
-#define ENGINE_FGFX_H
+#ifndef FGFX_H
+#define FGFX_H
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,6 +14,7 @@
 #include <functional>
 
 namespace fgfx {
+
   class Engine;
   class LineLayer;
   class SpriteLayer;
@@ -34,7 +35,7 @@ namespace fgfx {
 #endif
 
 #ifdef __ANDROID
-extern AAssetManager* assetManager;
+  extern AAssetManager* assetManager;
 #endif
 
   void loadFile(std::string path, std::function<void(std::string)>);
@@ -48,8 +49,10 @@ extern AAssetManager* assetManager;
 #include "../src/PolygonLayer.h"
 #include "../src/SpriteFont.h"
 #include "../src/Texture.h"
+
+#include "../src/TexturedBuffer.h"
 #include "../src/TexturedLayer.h"
 #include "../src/TextureTransitionLayer.h"
 #include "../src/Image.h"
 
-#endif //ENGINE_FGFX_H
+#endif //FGFX_H

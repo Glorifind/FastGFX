@@ -11,11 +11,11 @@ namespace fgfx {
     composition=1;
   };
 
-  PBRTextureBuffer* TexturedLayer::getBuffer(int textureId) {
+  TexturedBuffer* TexturedLayer::getBuffer(int textureId) {
     for(auto it=buffers.begin(); it!=buffers.end(); ++it) {
       if((*it)->textureId == textureId) return *it;
     }
-    PBRTextureBuffer* buf = new PBRTextureBuffer(textureId);
+    TexturedBuffer* buf = new TexturedBuffer(textureId);
     buffers.push_back(buf);
     return buf;
   }
@@ -110,7 +110,7 @@ namespace fgfx {
 
   void TexturedLayer::reset() {
     for(auto it = buffers.begin(); it!=buffers.end(); ++it) {
-      PBRTextureBuffer *buffer = *it;
+      TexturedBuffer *buffer = *it;
       buffer->reset();
     }
   }
@@ -118,7 +118,7 @@ namespace fgfx {
   void TexturedLayer::upload() {
     if(!visible) return;
     for(auto it = buffers.begin(); it!=buffers.end(); ++it) {
-      PBRTextureBuffer *buffer = *it;
+      TexturedBuffer *buffer = *it;
       buffer->upload();
     }
   }
@@ -129,7 +129,7 @@ namespace fgfx {
     glActiveTexture(GL_TEXTURE0);
     glDisable(GL_CULL_FACE);
     for(auto it = buffers.begin(); it!=buffers.end(); ++it) {
-      PBRTextureBuffer* buffer=*it;
+      TexturedBuffer* buffer=*it;
       glBindTexture(GL_TEXTURE_2D, buffer->textureId);
       glUniform1i(TexturedLayer::texturedProgramUniformSampler, 0);
       buffer->render();
@@ -148,7 +148,7 @@ namespace fgfx {
     if(texture->texture == -1) return;
     getBuffer(texture->texture)->bufferPoint(point, color, coord);
   }
-  PBRTextureBuffer* TexturedLayer::getBuffer(const std::shared_ptr<Texture>& texture) {
+  TexturedBuffer* TexturedLayer::getBuffer(const std::shared_ptr<Texture>& texture) {
     fgfx_log("GET BUFFER %d", texture->texture);
     if(texture->unloaded) engine->reloadTexture(texture);
     if(texture->texture == -1) return nullptr;
