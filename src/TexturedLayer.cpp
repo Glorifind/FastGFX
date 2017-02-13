@@ -134,7 +134,6 @@ namespace fgfx {
       glUniform1i(TexturedLayer::texturedProgramUniformSampler, 0);
       buffer->render();
     }
-
     endDraw();
   }
 
